@@ -58,7 +58,7 @@ function keyPressed() {
 			getNewBlock();
 		}
 	} else if (keyCode == UP_ARROW) {
-		currBlock.getNextVariation();
+		currBlock.rotate();
 	}
 }
 

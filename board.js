@@ -84,7 +84,6 @@ function Board(numCols, numRows) {
 				return false;
 			}
 			if (getSpaceAt(x - 1, y).getOccupied()) {
-				console.log("NO");
 				return false;
 			}
 		}
@@ -109,7 +108,6 @@ function Board(numCols, numRows) {
             for (j = 0; j < board[i].length; j++) {
                 var s = getSpaceAt(j, i);
                 if (s.getOccupied()) {
-					console.log(s.getColor());
 					fill(s.getColor());
                     rect(s.getX() * blockSize, s.getY() * blockSize, blockSize, blockSize);
                 }

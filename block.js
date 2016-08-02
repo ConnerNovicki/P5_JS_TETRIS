@@ -33,6 +33,44 @@ function Block(space) {
 		anchorSpace = new Space(anchorSpace.getX() - 1, anchorSpace.getY());
 	}
 
+	this.getNextVariation = function(numVars, allStructs, currVar) {
+		var variation;
+		if (numVars == 4) {
+			switch (this.currVar) {
+				case allStructs.var1:
+					variation = allStructs.var2;
+					break;
+				case allStructs.var2:
+					variation = allStructs.var3;
+					break;
+				case allStructs.var3:
+					variation = allStructs.var4;
+					break;
+				case allStructs.var4:
+					variation = allStructs.var1;
+					break;
+			}
+		} else {
+			switch (this.currVar) {
+				case allStructs.var1:
+					variation = allStructs.var2;
+					break;
+				case allStructs.var2:
+					variation = allStructs.var1;
+					break;
+				}
+			}
+		return variation;
+	}
+
+	this.rotateBlock = function(numVars, allStructs, currVar) {
+		var variation = this.getNextVariation(numVars, allStructs, currVar);
+		this.currVar = variation;
+		this.structure = this.currVar.s;
+		this.rightMost = this.currVar.rmost;
+		this.leftMost = this.currVar.lmost;
+	}
+
 	this.getAllSquaresOfBlock = function() {
 		// Returns array of [x, y] arrays
 		var allSquares = [];
@@ -115,26 +153,11 @@ function LBlock(space) {
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 
-	this.getNextVariation = function() {
-		switch (this.currVar) {
-			case allStructs.var1:
-				this.currVar = allStructs.var2;
-				break;
-			case allStructs.var2:
-				this.currVar = allStructs.var3;
-				break;
-			case allStructs.var3:
-				this.currVar = allStructs.var4;
-				break;
-			case allStructs.var4:
-				this.currVar = allStructs.var1;
-				break;
-		}
-		this.structure = this.currVar.s;
-		this.rightMost = this.currVar.rMost;
-		this.leftMost = this.currVar.lMost;
-	}
 
+
+	this.rotate = function() {
+		this.rotateBlock(4, allStructs, this.currVar);
+	}
 }
 
 function BLBlock(space) {
@@ -179,24 +202,8 @@ function BLBlock(space) {
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 
-	this.getNextVariation = function() {
-		switch (this.currVar) {
-			case allStructs.var1:
-				this.currVar = allStructs.var2;
-				break;
-			case allStructs.var2:
-				this.currVar = allStructs.var3;
-				break;
-			case allStructs.var3:
-				this.currVar = allStructs.var4;
-				break;
-			case allStructs.var4:
-				this.currVar = allStructs.var1;
-				break;
-		}
-		this.structure = this.currVar.s;
-		this.rightMost = this.currVar.rMost;
-		this.leftMost = this.currVar.lMost;
+	this.rotate = function() {
+		this.rotateBlock(4, allStructs, this.currVar);
 	}
 }
 
@@ -230,18 +237,8 @@ function LineBlock(space) {
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 
-	this.getNextVariation = function() {
-		switch (this.currVar) {
-			case allStructs.var1:
-				this.currVar = allStructs.var2;
-				break;
-			case allStructs.var2:
-				this.currVar = allStructs.var1;
-				break;
-		}
-		this.structure = this.currVar.s;
-		this.rightMost = this.currVar.rMost;
-		this.leftMost = this.currVar.lMost;
+	this.rotate = function() {
+		this.rotateBlock(2, allStructs, this.currVar);
 	}
 
 }
@@ -273,18 +270,8 @@ function ZBlock(space) {
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 
-	this.getNextVariation = function() {
-		switch (this.currVar) {
-			case allStructs.var1:
-				this.currVar = allStructs.var2;
-				break;
-			case allStructs.var2:
-				this.currVar = allStructs.var1;
-				break;
-		}
-		this.structure = this.currVar.s;
-		this.rightMost = this.currVar.rMost;
-		this.leftMost = this.currVar.lMost;
+	this.rotate = function() {
+		this.rotateBlock(2, allStructs, this.currVar);
 	}
 }
 
@@ -315,18 +302,8 @@ function BZBlock(space) {
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 
-	this.getNextVariation = function() {
-		switch (this.currVar) {
-			case allStructs.var1:
-				this.currVar = allStructs.var2;
-				break;
-			case allStructs.var2:
-				this.currVar = allStructs.var1;
-				break;
-		}
-		this.structure = this.currVar.s;
-		this.rightMost = this.currVar.rMost;
-		this.leftMost = this.currVar.lMost;
+	this.rotate = function() {
+		this.rotateBlock(2, allStructs, this.currVar);
 	}
 }
 
@@ -370,25 +347,11 @@ function TBlock(space) {
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 
-	this.getNextVariation = function() {
-		switch (this.currVar) {
-			case allStructs.var1:
-				this.currVar = allStructs.var2;
-				break;
-			case allStructs.var2:
-				this.currVar = allStructs.var3;
-				break;
-			case allStructs.var3:
-				this.currVar = allStructs.var4;
-				break;
-			case allStructs.var4:
-				this.currVar = allStructs.var1;
-				break;
-		}
-		this.structure = this.currVar.s;
-		this.rightMost = this.currVar.rMost;
-		this.leftMost = this.currVar.lMost;
+	this.rotate = function(){
+		this.rotateBlock(4, allStructs, this.currVar);
 	}
+
+
 }
 
 

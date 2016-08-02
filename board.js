@@ -37,7 +37,7 @@ function Board(numCols, numRows) {
 		// allBlcoks is list of all square of block
 		if (!block instanceof Block) { throw new Error("Must pass isValidMove a Block object");}
 
-		var allSquares = block.getAllSquaresOfBlock();
+		var allSquares = block.getAllSquaresOfBlock(block.structure);
 		for (i = 0; i < allSquares.length; i++) {
 			var x = allSquares[i][0];
 			var y = allSquares[i][1];
@@ -57,7 +57,7 @@ function Board(numCols, numRows) {
 	this.canMoveRight = function(block) {
 		if (!block instanceof Block) { throw new Error("Must pass canMoveRight a Block object");}
 
-		var allSquares = block.getAllSquaresOfBlock();
+		var allSquares = block.getAllSquaresOfBlock(block.structure);
 		for (i = 0; i < allSquares.length; i++) {
 			var x = allSquares[i][0];
 			var y = allSquares[i][1];
@@ -75,7 +75,7 @@ function Board(numCols, numRows) {
 	this.canMoveLeft = function(block) {
 		if (!block instanceof Block) { throw new Error("Must pass canMoveRight a Block object");}
 
-		var allSquares = block.getAllSquaresOfBlock();
+		var allSquares = block.getAllSquaresOfBlock(block.structure);
 		for (i = 0; i < allSquares.length; i++) {
 			var x = allSquares[i][0];
 			var y = allSquares[i][1];
@@ -90,10 +90,24 @@ function Board(numCols, numRows) {
 		return true;
 	}
 
+	this.canRotate = function(arrayOfSquares) {
+		console.log("Checking rotate");
+		console.log(arrayOfSquares);
+		for (i = 0; i < arrayOfSquares.length; i++) {
+			var x = arrayOfSquares[i][0];
+			var y = arrayOfSquares[i][1];
+			console.log(x, y);
+			if (getSpaceAt(x, y).getOccupied()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	this.addBlock = function(block) {
 		if (!block instanceof Block) { throw new Error("Must pass addBlock a Block object");}
 
-		allSquares = block.getAllSquaresOfBlock();
+		allSquares = block.getAllSquaresOfBlock(block.structure);
 		var color = block.color;
 		for (i = 0; i < allSquares.length; i++) {
 			var s = allSquares[i];

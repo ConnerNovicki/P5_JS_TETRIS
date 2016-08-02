@@ -33,7 +33,7 @@ function Block(space) {
 		anchorSpace = new Space(anchorSpace.getX() - 1, anchorSpace.getY());
 	}
 
-	this.getNextVariation = function(numVars, allStructs, currVar) {
+	this._getNextVariation = function(numVars, allStructs, currVar) {
 		var variation;
 		if (numVars == 4) {
 			switch (this.currVar) {
@@ -64,19 +64,19 @@ function Block(space) {
 	}
 
 	this.rotateBlock = function(numVars, allStructs, currVar) {
-		var variation = this.getNextVariation(numVars, allStructs, currVar);
+		var variation = this._getNextVariation(numVars, allStructs, currVar);
 		this.currVar = variation;
 		this.structure = this.currVar.s;
 		this.rightMost = this.currVar.rmost;
 		this.leftMost = this.currVar.lmost;
 	}
 
-	this.getAllSquaresOfBlock = function() {
+	this.getAllSquaresOfBlock = function(structure) {
 		// Returns array of [x, y] arrays
 		var allSquares = [];
-		for (i = 0; i < this.structure.length; i++) {
-			for (j = 0; j < this.structure[i].length; j++) {
-				if (this.structure[i][j] == 1) {
+		for (i = 0; i < structure.length; i++) {
+			for (j = 0; j < structure[i].length; j++) {
+				if (structure[i][j] == 1) {
 					var space = this.getAnchorSpace();
 					allSquares.push([space.getX() + j, space.getY() + i])
 				}
@@ -86,7 +86,7 @@ function Block(space) {
 	}
 
     this.draw = function() {
-		var squares = this.getAllSquaresOfBlock();
+		var squares = this.getAllSquaresOfBlock(this.structure);
 		for (i = 0; i < squares.length; i++) {
 			fill(this.color);
 			rect(squares[i][0] * blockSize, squares[i][1] * blockSize, blockSize, blockSize)
@@ -107,8 +107,18 @@ function SquareBlock(space) {
 
 	this.rightMost = 1;
 	this.leftMost = 0;
-	this.getNextVariation = function() {
+
+	this.rotate = function() {
 		return;
+	}
+
+	this.getNextVariation = function() {
+		return {
+			s: [[1, 1],
+                 [1, 1]],
+			rMost: 1,
+			lMost: 0
+		};
 	}
 }
 
@@ -152,11 +162,14 @@ function LBlock(space) {
     this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
+	this.numVariations = 4;
 
-
+	this.getNextVariation = function() {
+		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
+	}
 
 	this.rotate = function() {
-		this.rotateBlock(4, allStructs, this.currVar);
+		this.rotateBlock(this.numVariations, allStructs, this.currVar);
 	}
 }
 
@@ -201,9 +214,14 @@ function BLBlock(space) {
     this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
+	this.numVariations = 4;
+
+	this.getNextVariation = function() {
+		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
+	}
 
 	this.rotate = function() {
-		this.rotateBlock(4, allStructs, this.currVar);
+		this.rotateBlock(this.numVariations, allStructs, this.currVar);
 	}
 }
 
@@ -236,9 +254,14 @@ function LineBlock(space) {
     this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
+	this.numVariations = 2;
+
+	this.getNextVariation = function() {
+		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
+	}
 
 	this.rotate = function() {
-		this.rotateBlock(2, allStructs, this.currVar);
+		this.rotateBlock(this.numVariations, allStructs, this.currVar);
 	}
 
 }
@@ -269,9 +292,14 @@ function ZBlock(space) {
     this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
+	this.numVariations = 2;
+
+	this.getNextVariation = function() {
+		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
+	}
 
 	this.rotate = function() {
-		this.rotateBlock(2, allStructs, this.currVar);
+		this.rotateBlock(this.numVariations, allStructs, this.currVar);
 	}
 }
 
@@ -301,9 +329,14 @@ function BZBlock(space) {
     this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
+	this.numVariations = 2;
+
+	this.getNextVariation = function() {
+		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
+	}
 
 	this.rotate = function() {
-		this.rotateBlock(2, allStructs, this.currVar);
+		this.rotateBlock(this.numVariations, allStructs, this.currVar);
 	}
 }
 
@@ -346,12 +379,15 @@ function TBlock(space) {
     this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
+	this.numVariations = 4;
 
-	this.rotate = function(){
-		this.rotateBlock(4, allStructs, this.currVar);
+	this.getNextVariation = function() {
+		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
 	}
 
-
+	this.rotate = function() {
+		this.rotateBlock(this.numVariations, allStructs, this.currVar);
+	}
 }
 
 

@@ -58,7 +58,13 @@ function keyPressed() {
 			getNewBlock();
 		}
 	} else if (keyCode == UP_ARROW) {
-		currBlock.rotate();
+		// Check if block can rotate
+		var newStructure = currBlock.getNextVariation().s;
+		var blocks = currBlock.getAllSquaresOfBlock(newStructure);
+		console.log(newStructure, blocks);
+		if (board.canRotate(blocks)) {
+			currBlock.rotate();
+		}
 	}
 }
 

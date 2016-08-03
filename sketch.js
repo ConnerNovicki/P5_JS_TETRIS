@@ -7,13 +7,14 @@ var numRows = canvasHeight / blockSize;
 var numCols = canvasWidth / blockSize;
 var board;
 var speedMillis = 500;
+var speedUpTime = 100;
 var time = 0;
 
 function setup() {
     createCanvas(canvasWidth, canvasHeight);
     board = new Board(numCols, numRows);
 	getNewBlock();
-
+	frameRate(10);
 }
 
 function draw() {
@@ -24,23 +25,47 @@ function draw() {
 
 	// Check for auto move bc time
 	if (Math.abs(time - millis()) > speedMillis) {
-		//TODO : FIXME
+		fastTime = millis();
 		if (board.canFallDown(currBlock)) {
 			currBlock.siftDown();
 		} else {
 			board.addBlock(currBlock);
+			board.deleteRows();
 			currBlock = null;
 			getNewBlock();
 		}
 		time = millis();
 	}
 
-	//
+	if (keyIsDown(DOWN_ARROW)) {
+		if (Math.abs(fastTime - millis()) > 100) {
+			nonUpKeyPressed();
+		}
+		time = millis();
+	}
+
+
+	if (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)) {
+		nonUpKeyPressed();
+	}
+
     currBlock.draw();
     board.drawBoard();
 }
 
 function keyPressed() {
+
+	if (keyCode == UP_ARROW) {
+		// Check if block can rotate
+		var newStructure = currBlock.getNextVariation().s;
+		var blocks = currBlock.getAllSquaresOfBlock(newStructure);
+		if (board.canRotate(blocks)) {
+			currBlock.rotate();
+		}
+	}
+}
+
+function nonUpKeyPressed() {
 	if (keyCode == RIGHT_ARROW) {
 		if (board.canMoveRight(currBlock)) {
 			currBlock.moveRight();
@@ -54,6 +79,7 @@ function keyPressed() {
 			currBlock.siftDown();
 		} else {
 			board.addBlock(currBlock);
+			board.deleteRows();
 			currBlock = null;
 			getNewBlock();
 		}
@@ -61,7 +87,6 @@ function keyPressed() {
 		// Check if block can rotate
 		var newStructure = currBlock.getNextVariation().s;
 		var blocks = currBlock.getAllSquaresOfBlock(newStructure);
-		console.log(newStructure, blocks);
 		if (board.canRotate(blocks)) {
 			currBlock.rotate();
 		}

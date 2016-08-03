@@ -62,7 +62,7 @@ function Board(numCols, numRows) {
 			var x = allSquares[i][0];
 			var y = allSquares[i][1];
 
-			if (x > canvasWidth / blockSize - 1) {
+			if (x > canvasWidth / blockSize - 2) {
 				return false;
 			}
 			if (getSpaceAt(x + 1, y).getOccupied()) {
@@ -80,7 +80,7 @@ function Board(numCols, numRows) {
 			var x = allSquares[i][0];
 			var y = allSquares[i][1];
 
-			if (x < 0) {
+			if (x < 1) {
 				return false;
 			}
 			if (getSpaceAt(x - 1, y).getOccupied()) {
@@ -91,12 +91,9 @@ function Board(numCols, numRows) {
 	}
 
 	this.canRotate = function(arrayOfSquares) {
-		console.log("Checking rotate");
-		console.log(arrayOfSquares);
 		for (i = 0; i < arrayOfSquares.length; i++) {
 			var x = arrayOfSquares[i][0];
 			var y = arrayOfSquares[i][1];
-			console.log(x, y);
 			if (getSpaceAt(x, y).getOccupied()) {
 				return false;
 			}
@@ -115,6 +112,64 @@ function Board(numCols, numRows) {
 			var y = s[1];
 			this.colorSquare(x, y, color);
 		}
+	}
+
+	var getCompletedRows = function() {
+		var completedRows = [];
+		for (i = 0; i < board.length; i++) {
+			var isComplete = true;
+			for (j = 0; j < board[i].length; j++) {
+				if (!getSpaceAt(j, i).getOccupied()) {
+					isComplete = false;
+				}
+			}
+			if (isComplete) {
+				completedRows.push(i);
+			}
+		}
+		return completedRows;
+	}
+
+	this.deleteRows = function() {
+		var completedRows = getCompletedRows();
+		for (i = 0; i < completedRows.length; i++) {
+			board.splice(completedRows[i], 1);
+			shiftBoardDown(completedRows[i]);
+			board.unshift(getNewRow());
+		}
+
+//		var completedRows = getCompletedRows();
+//		for (i = 0; i < completedRows.length; i++) {
+//			var rowCompleted = completedRows[i];
+//
+//			board.splice(rowCompleted, 1);
+//			this.shiftBoardDown(rowCompleted);
+//		}
+//
+//
+//		for (i = 0 ; i < completedRows.length; i++) {
+//			var tempArr = [];
+//			for (j = 0; j < cols; j++) {
+//				tempArr.push(new Space(j, 0));
+//			}
+//			board.unshift(tempArr);
+//		}
+	}
+
+	var shiftBoardDown = function(completedRow) {
+		for (i = 0; i < completedRow; i++) {
+			for (j = 0; j < cols; j++) {
+				getSpaceAt(j, i).shiftDown();
+			}
+		}
+	}
+
+	var getNewRow = function() {
+		var tempArray = [];
+		for (i = 0; i < cols; i++) {
+			tempArray.push(new Space(i, 0));
+		}
+		return tempArray;
 	}
 
     this.drawBoard = function() {

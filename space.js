@@ -30,4 +30,8 @@ function Space(x, y) {
 		this.color = clr;
 		occupied = true;
 	}
+
+	this.shiftDown = function() {
+		y ++;
+	}
 }

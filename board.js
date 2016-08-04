@@ -5,6 +5,7 @@ function Board(numCols, numRows) {
 	var board = [];
     var cols = numCols;
     var rows = numRows;
+	var score = 0;
 
 	var setupBoard = function(c, r) {
         for (i = 0; i < r; i++) {
@@ -136,6 +137,7 @@ function Board(numCols, numRows) {
 			board.splice(completedRows[i], 1);
 			shiftBoardDown(completedRows[i]);
 			board.unshift(getNewRow());
+			score++;
 		}
 
 //		var completedRows = getCompletedRows();
@@ -171,6 +173,10 @@ function Board(numCols, numRows) {
 			return true;
 		}
 		return false;
+	}
+
+	this.getScore = function() {
+		return score;
 	}
 
 	var getNewRow = function() {

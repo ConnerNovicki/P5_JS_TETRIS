@@ -11,6 +11,8 @@ var speedUpTime = 100;
 var time = 0;
 var currKey = null;
 var prevKey = null;
+var resetTextColor = 'white';
+var resetBoxColor = 'orange';
 
 function setup() {
     createCanvas(canvasWidth * 2, canvasHeight);
@@ -23,11 +25,10 @@ function draw() {
     background(50);
 
 	// Draw right menu
-	strokeWeight(4);
-	stroke(255, 204, 100);
-	line(canvasWidth, 0, canvasWidth, canvasHeight);
+	drawMenu();
+	checkMousePos();
 
-	stroke(255, 255, 255);
+	resetDefaultStyles();
     if (currBlock == null) {
         getNewBlock();
     }
@@ -55,6 +56,42 @@ function draw() {
     board.drawBoard();
 	if (board.gameIsOver()) {
 		console.log('GAME OVER');
+	}
+}
+
+function drawMenu() {
+	strokeWeight(4);
+	stroke(255, 204, 100);
+	line(canvasWidth, 0, canvasWidth, canvasHeight);
+
+	fill(resetBoxColor);
+	rect(370, 270, 140, 40);
+
+	fill(255, 255, 255);
+	strokeWeight(1);
+	textSize(30);
+	textStyle(NORMAL);
+	text("Score: " + board.getScore(), 400, 100);
+	fill(resetTextColor);
+	text("Reset", 400, 300);
+}
+
+function resetDefaultStyles() {
+	stroke(255, 255, 255);
+	strokeWeight(2);
+}
+
+function checkMousePos() {
+	if (mouseX > 400 && mouseX < 550 && mouseY > 275 && mouseY < 325) {
+		resetTextColor = 'red';
+		resetBoxColor = 'blue';
+		if (mouseIsPressed) {
+			//RESET GAME
+			console.log("reset");
+		}
+	} else {
+		resetBoxColor = 'orange';
+		resetTextColor = 'white';
 	}
 }
 

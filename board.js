@@ -164,6 +164,15 @@ function Board(numCols, numRows) {
 		}
 	}
 
+	// IMPLEMENT
+	this.gameIsOver = function() {
+		if (getSpaceAt(3, 0).getOccupied() || getSpaceAt(3, 0).getOccupied() ||
+		    getSpaceAt(3, 0).getOccupied() || getSpaceAt(3, 0).getOccupied()) {
+			return true;
+		}
+		return false;
+	}
+
 	var getNewRow = function() {
 		var tempArray = [];
 		for (i = 0; i < cols; i++) {

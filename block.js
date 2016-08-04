@@ -229,7 +229,7 @@ function LineBlock(space) {
     // Call parent constructor
     Block.call(this, space);
 
-	this.color = color(255, 255, 255); // WHITE
+	this.color = color(0, 0, 0); // WHITE
 
 	var allStructs = {
 		var1: {

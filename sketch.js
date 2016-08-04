@@ -9,9 +9,11 @@ var board;
 var speedMillis = 500;
 var speedUpTime = 100;
 var time = 0;
+var currKey = null;
+var prevKey = null;
 
 function setup() {
-    createCanvas(canvasWidth, canvasHeight);
+    createCanvas(canvasWidth * 2, canvasHeight);
     board = new Board(numCols, numRows);
 	getNewBlock();
 	frameRate(10);
@@ -19,6 +21,13 @@ function setup() {
 
 function draw() {
     background(50);
+
+	// Draw right menu
+	strokeWeight(4);
+	stroke(255, 204, 100);
+	line(canvasWidth, 0, canvasWidth, canvasHeight);
+
+	stroke(255, 255, 255);
     if (currBlock == null) {
         getNewBlock();
     }
@@ -37,25 +46,27 @@ function draw() {
 		time = millis();
 	}
 
-	if (keyIsDown(DOWN_ARROW)) {
-		if (Math.abs(fastTime - millis()) > 100) {
-			nonUpKeyPressed();
-		}
-		time = millis();
-	}
 
-
-	if (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)) {
+	if (keyIsDown(DOWN_ARROW) || keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)) {
 		nonUpKeyPressed();
 	}
 
     currBlock.draw();
     board.drawBoard();
+	if (board.gameIsOver()) {
+		console.log('GAME OVER');
+	}
 }
 
 function keyPressed() {
+	if (currKey != null){
+		prevKey = currKey;
+		currKey = keyCode;
+	} else {
+		currKey = keyCode;
+	}
 
-	if (keyCode == UP_ARROW) {
+	if (currKey == UP_ARROW) {
 		// Check if block can rotate
 		var newStructure = currBlock.getNextVariation().s;
 		var blocks = currBlock.getAllSquaresOfBlock(newStructure);
@@ -66,15 +77,15 @@ function keyPressed() {
 }
 
 function nonUpKeyPressed() {
-	if (keyCode == RIGHT_ARROW) {
+	if (currKey == RIGHT_ARROW) {
 		if (board.canMoveRight(currBlock)) {
 			currBlock.moveRight();
 		}
-	} else if (keyCode == LEFT_ARROW) {
+	} else if (currKey == LEFT_ARROW) {
 		if (board.canMoveLeft(currBlock)) {
 			currBlock.moveLeft();
 		}
-	} else if (keyCode == DOWN_ARROW) {
+	} else if (currKey == DOWN_ARROW) {
 		if (board.canFallDown(currBlock)) {
 			currBlock.siftDown();
 		} else {
@@ -83,13 +94,18 @@ function nonUpKeyPressed() {
 			currBlock = null;
 			getNewBlock();
 		}
-	} else if (keyCode == UP_ARROW) {
-		// Check if block can rotate
-		var newStructure = currBlock.getNextVariation().s;
-		var blocks = currBlock.getAllSquaresOfBlock(newStructure);
-		if (board.canRotate(blocks)) {
-			currBlock.rotate();
-		}
+		time = millis();
+	}
+}
+
+function keyReleased() {
+
+	if (keyIsDown(RIGHT_ARROW)) {
+		currKey = RIGHT_ARROW;
+	} else if (keyIsDown(LEFT_ARROW)) {
+		currKey = LEFT_ARROW;
+	} else if (keyIsDown(DOWN_ARROW)) {
+		currKey = DOWN_ARROW;
 	}
 }
 

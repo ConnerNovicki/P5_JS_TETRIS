@@ -70,20 +70,28 @@ function drawMenu() {
 	fill(resetBoxColor);
 	rect(370, 270, 140, 40);
 
+	fill("orange");
+	rect(370, 350, 140, 40);
+
 	fill(255, 255, 255);
 	strokeWeight(1);
 	textSize(30);
 	textStyle(NORMAL);
-	text("Score: " + board.getScore(), 400, 100);
+	text("Lines: " + board.getScore(), 400, 500);
 	fill(resetTextColor);
 	text("Reset", 400, 300);
+	fill("white");
+	text("Pause", 400, 380);
 }
 
 function drawPreviewBlock() {
+	resetDefaultStyles();
+	text("Next Piece", 380, 40)
     previewBlock.draw();
 }
 
 function resetDefaultStyles() {
+	fill(255, 255, 255);
 	stroke(255, 255, 255);
 	strokeWeight(2);
 }
@@ -161,7 +169,7 @@ function setNewBlock() {
     } else {
         currBlock = getNewBlock(3, 0);
     }
-    previewBlock = getNewBlock(13, 4);
+    previewBlock = getNewBlock(14, 2);
 }
 
 function getNewBlock(x, y) {

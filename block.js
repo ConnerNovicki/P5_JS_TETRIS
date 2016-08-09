@@ -21,6 +21,10 @@ function Block(space) {
         return anchorSpace;
     }
 
+    this.setAnchorSpace = function(space) {
+        anchorSpace = space
+    }
+
 	this.siftDown = function() {
 		anchorSpace = new Space(anchorSpace.getX(), anchorSpace.getY() + 1);
 	}

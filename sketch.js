@@ -1,6 +1,7 @@
 var blockSize = 30;
 
 var gameActive = false;
+var gamePaused = true;
 
 var canvasWidth = 300;
 var canvasHeight = 600;
@@ -14,6 +15,7 @@ var time = 0;
 var currKey = null;
 var prevKey = null;
 var previewBlock = null;
+var blockLocked = false;
 
 function setup() {
     createCanvas(canvasWidth * 2, canvasHeight);
@@ -27,6 +29,13 @@ function draw() {
 		if (playButtonPressed()) {
 			newGame();
 		}
+		return;
+	}
+
+	if (gamePaused) {
+		currBlock.draw();
+		board.drawBoard();
+		checkMousePos();
 		return;
 	}
 
@@ -48,7 +57,7 @@ function draw() {
 			currBlock.siftDown();
 		} else {
 			board.addBlock(currBlock);
-			board.deleteRows();
+			blockLocked = true;
 			currBlock = null;
 			setNewBlock();
 		}
@@ -58,6 +67,11 @@ function draw() {
 
 	if (keyIsDown(DOWN_ARROW) || keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)) {
 		nonUpKeyPressed();
+	}
+
+	if (blockLocked) {
+		board.deleteRows();
+		blockLocked = false;
 	}
 
     currBlock.draw();
@@ -94,8 +108,6 @@ function drawSideBar() {
 
 	fill('orange');
 	rect(370, 270, 140, 40);
-
-	fill("orange");
 	rect(370, 350, 140, 40);
 
 	fill(255, 255, 255);
@@ -131,10 +143,16 @@ function resetDefaultStyles() {
 }
 
 function checkMousePos() {
-	if (mouseX > 400 && mouseX < 550 && mouseY > 275 && mouseY < 325) {
-		if (mouseIsPressed) {
+	if (mouseIsPressed) {
+		if (mouseX > 370 && mouseX < 510 && mouseY > 270 && mouseY < 310) {
 			//RESET GAME
 			newGame();
+		} else if (mouseX > 370 && mouseX < 510 && mouseY > 350 && mouseY < 390) {
+			if (gamePaused) {
+				gamePaused = false;
+			} else {
+				gamePaused = true;
+			}
 		}
 	}
 }
@@ -158,15 +176,7 @@ function keyPressed() {
 }
 
 function nonUpKeyPressed() {
-	if (currKey == RIGHT_ARROW) {
-		if (board.canMoveRight(currBlock)) {
-			currBlock.moveRight();
-		}
-	} else if (currKey == LEFT_ARROW) {
-		if (board.canMoveLeft(currBlock)) {
-			currBlock.moveLeft();
-		}
-	} else if (currKey == DOWN_ARROW) {
+	if (keyIsDown(DOWN_ARROW)) {
 		if (board.canFallDown(currBlock)) {
 			currBlock.siftDown();
 		} else {
@@ -175,6 +185,43 @@ function nonUpKeyPressed() {
 			currBlock = null;
 			setNewBlock();
 		}
+
+	}
+	if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) {
+		if (currKey == RIGHT_ARROW) {
+			if (board.canMoveRight(currBlock)) {
+				currBlock.moveRight();
+			}
+		}
+	} else {
+
+	if (keyIsDown(LEFT_ARROW)) {
+		if (board.canMoveLeft(currBlock)) {
+			currBlock.moveLeft();
+		}
+	} if (keyIsDown(RIGHT_ARROW)) {
+		if (board.canMoveRight(currBlock)) {
+			currBlock.moveRight();
+		}
+	}
+
+//	if (currKey == RIGHT_ARROW) {
+//		if (board.canMoveRight(currBlock)) {
+//			currBlock.moveRight();
+//		}
+//	} if (currKey == LEFT_ARROW) {
+//		if (board.canMoveLeft(currBlock)) {
+//			currBlock.moveLeft();
+//		}
+//	} if (currKey == DOWN_ARROW) {
+//		if (board.canFallDown(currBlock)) {
+//			currBlock.siftDown();
+//		} else {
+//			board.addBlock(currBlock);
+//			board.deleteRows();
+//			currBlock = null;
+//			setNewBlock();
+//		}
 		time = millis();
 	}
 }
@@ -205,6 +252,7 @@ function newGame() {
 	gameActive = true;
 	board = new Board(numCols, numRows);
 	setNewBlock();
+	gamePaused = false;
 }
 
 function gameOver() {

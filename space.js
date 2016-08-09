@@ -32,6 +32,6 @@ function Space(x, y) {
 	}
 
 	this.shiftDown = function() {
-		y ++;
+		y++;
 	}
 }

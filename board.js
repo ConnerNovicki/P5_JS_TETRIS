@@ -122,6 +122,7 @@ function Board(numCols, numRows) {
 			for (j = 0; j < board[i].length; j++) {
 				if (!getSpaceAt(j, i).getOccupied()) {
 					isComplete = false;
+					break;
 				}
 			}
 			if (isComplete) {
@@ -133,7 +134,14 @@ function Board(numCols, numRows) {
 
 	this.deleteRows = function() {
 		var completedRows = getCompletedRows();
-		for (i = 0; i < completedRows.length; i++) {
+		console.log(completedRows);
+
+		var numDeleteRows = completedRows.length;
+
+
+
+		for (i = 0; i < numDeleteRows; i++) {
+			console.log(i);
 			board.splice(completedRows[i], 1);
 			shiftBoardDown(completedRows[i]);
 			board.unshift(getNewRow());

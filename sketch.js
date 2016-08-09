@@ -13,11 +13,12 @@ var currKey = null;
 var prevKey = null;
 var resetTextColor = 'white';
 var resetBoxColor = 'orange';
+var previewBlock = null;
 
 function setup() {
     createCanvas(canvasWidth * 2, canvasHeight);
     board = new Board(numCols, numRows);
-	getNewBlock();
+	setNewBlock();
 	frameRate(10);
 }
 
@@ -30,7 +31,7 @@ function draw() {
 
 	resetDefaultStyles();
     if (currBlock == null) {
-        getNewBlock();
+        setNewBlock();
     }
 
 	// Check for auto move bc time
@@ -42,7 +43,7 @@ function draw() {
 			board.addBlock(currBlock);
 			board.deleteRows();
 			currBlock = null;
-			getNewBlock();
+			setNewBlock();
 		}
 		time = millis();
 	}
@@ -60,6 +61,8 @@ function draw() {
 }
 
 function drawMenu() {
+    drawPreviewBlock();
+
 	strokeWeight(4);
 	stroke(255, 204, 100);
 	line(canvasWidth, 0, canvasWidth, canvasHeight);
@@ -74,6 +77,10 @@ function drawMenu() {
 	text("Score: " + board.getScore(), 400, 100);
 	fill(resetTextColor);
 	text("Reset", 400, 300);
+}
+
+function drawPreviewBlock() {
+    previewBlock.draw();
 }
 
 function resetDefaultStyles() {
@@ -129,7 +136,7 @@ function nonUpKeyPressed() {
 			board.addBlock(currBlock);
 			board.deleteRows();
 			currBlock = null;
-			getNewBlock();
+			setNewBlock();
 		}
 		time = millis();
 	}
@@ -146,36 +153,48 @@ function keyReleased() {
 	}
 }
 
-function getNewBlock() {
-	time = millis();
+function setNewBlock() {
+    time = millis();
+    if (previewBlock != null) {
+        currBlock = previewBlock;
+        currBlock.setAnchorSpace(new Space(3, 0));
+    } else {
+        currBlock = getNewBlock(3, 0);
+    }
+    previewBlock = getNewBlock(13, 4);
+}
+
+function getNewBlock(x, y) {
     var choice = Math.floor(Math.random() * 7);
+    var block;
     switch (choice) {
         case 1:
-            currBlock = new SquareBlock(new Space(3, 0));
+            block = new SquareBlock(new Space(x, y));
 			break;
 
 		case 2:
-			currBlock = new BLBlock(new Space(3, 0));
+			block = new BLBlock(new Space(x, y));
 			break;
 
 		case 3:
-			currBlock = new LineBlock(new Space(3, 0));
+			block = new LineBlock(new Space(x, y));
 			break;
 
 		case 4:
-			currBlock = new ZBlock(new Space(3, 0));
+			block = new ZBlock(new Space(x, y));
 			break;
 
 		case 5:
-			currBlock = new BZBlock(new Space(3, 0));
+			block = new BZBlock(new Space(x, y));
 			break;
 
 		case 6:
-			currBlock = new TBlock(new Space(3, 0));
+			block = new TBlock(new Space(x, y));
 			break;
 
 		default:
-			currBlock = new LBlock(new Space(3, 0));
+			block = new LBlock(new Space(x, y));
 			break;
     }
+    return block;
 }

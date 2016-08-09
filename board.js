@@ -168,8 +168,12 @@ function Board(numCols, numRows) {
 
 	// IMPLEMENT
 	this.gameIsOver = function() {
-		if (getSpaceAt(3, 0).getOccupied() || getSpaceAt(3, 0).getOccupied() ||
-		    getSpaceAt(3, 0).getOccupied() || getSpaceAt(3, 0).getOccupied()) {
+		if (getSpaceAt(4, 0).getOccupied() || getSpaceAt(5, 0).getOccupied() ||
+		    getSpaceAt(4, 1).getOccupied() || getSpaceAt(4, 1).getOccupied() ||
+		    getSpaceAt(0, 0).getOccupied() || getSpaceAt(1, 0).getOccupied() ||
+		    getSpaceAt(2, 0).getOccupied() || getSpaceAt(3, 0).getOccupied() ||
+		    getSpaceAt(6, 0).getOccupied() || getSpaceAt(7, 0).getOccupied() ||
+		    getSpaceAt(8, 0).getOccupied() || getSpaceAt(9, 0).getOccupied()) {
 			return true;
 		}
 		return false;

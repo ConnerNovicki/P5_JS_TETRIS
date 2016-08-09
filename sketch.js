@@ -1,5 +1,7 @@
 var blockSize = 30;
 
+var gameActive = false;
+
 var canvasWidth = 300;
 var canvasHeight = 600;
 var currBlock;
@@ -11,22 +13,27 @@ var speedUpTime = 100;
 var time = 0;
 var currKey = null;
 var prevKey = null;
-var resetTextColor = 'white';
-var resetBoxColor = 'orange';
 var previewBlock = null;
 
 function setup() {
     createCanvas(canvasWidth * 2, canvasHeight);
-    board = new Board(numCols, numRows);
-	setNewBlock();
 	frameRate(10);
 }
 
 function draw() {
+
+	if (!gameActive) {
+		drawMainMenu();
+		if (playButtonPressed()) {
+			newGame();
+		}
+		return;
+	}
+
     background(50);
 
 	// Draw right menu
-	drawMenu();
+	drawSideBar();
 	checkMousePos();
 
 	resetDefaultStyles();
@@ -56,18 +63,36 @@ function draw() {
     currBlock.draw();
     board.drawBoard();
 	if (board.gameIsOver()) {
+		gameOver();
 		console.log('GAME OVER');
 	}
 }
 
-function drawMenu() {
+function drawMainMenu() {
+	background(100);
+
+	// Tetris label
+	strokeWeight(4);
+	stroke(0, 0, 0);
+	fill(53, 25, 33);
+	textSize(50);
+	text("Tetris", 240, 100);
+
+	// Play box
+	fill('white');
+	rect(200, 200, 200, 100);
+	text("PLAY", 240, 265);
+
+}
+
+function drawSideBar() {
     drawPreviewBlock();
 
 	strokeWeight(4);
 	stroke(255, 204, 100);
 	line(canvasWidth, 0, canvasWidth, canvasHeight);
 
-	fill(resetBoxColor);
+	fill('orange');
 	rect(370, 270, 140, 40);
 
 	fill("orange");
@@ -78,10 +103,19 @@ function drawMenu() {
 	textSize(30);
 	textStyle(NORMAL);
 	text("Lines: " + board.getScore(), 400, 500);
-	fill(resetTextColor);
+	fill(0, 0, 0);
 	text("Reset", 400, 300);
-	fill("white");
+	fill("black");
 	text("Pause", 400, 380);
+}
+
+function playButtonPressed() {
+	if (mouseIsPressed) {
+		if (mouseX < 400 && mouseX > 200 && mouseY < 300 && mouseY > 200) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function drawPreviewBlock() {
@@ -98,15 +132,10 @@ function resetDefaultStyles() {
 
 function checkMousePos() {
 	if (mouseX > 400 && mouseX < 550 && mouseY > 275 && mouseY < 325) {
-		resetTextColor = 'red';
-		resetBoxColor = 'blue';
 		if (mouseIsPressed) {
 			//RESET GAME
-			console.log("reset");
+			newGame();
 		}
-	} else {
-		resetBoxColor = 'orange';
-		resetTextColor = 'white';
 	}
 }
 
@@ -165,11 +194,28 @@ function setNewBlock() {
     time = millis();
     if (previewBlock != null) {
         currBlock = previewBlock;
-        currBlock.setAnchorSpace(new Space(3, 0));
+        currBlock.setAnchorSpace(new Space(4, 0));
     } else {
-        currBlock = getNewBlock(3, 0);
+        currBlock = getNewBlock(4, 0);
     }
     previewBlock = getNewBlock(14, 2);
+}
+
+function newGame() {
+	gameActive = true;
+	board = new Board(numCols, numRows);
+	setNewBlock();
+}
+
+function gameOver() {
+	fill('white');
+	rect(150, 200, 300, 200);
+	fill('black');
+	stroke(3);
+	text('Game Over', 220, 300);
+	if (mouseIsPressed) {
+		newGame();
+	}
 }
 
 function getNewBlock(x, y) {

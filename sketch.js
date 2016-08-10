@@ -9,8 +9,8 @@ var currBlock;
 var numRows = canvasHeight / blockSize;
 var numCols = canvasWidth / blockSize;
 var board;
-var speedMillis = 500;
-var speedUpTime = 100;
+var speedMillis = 600;
+var speedUpTime = 150;
 var time = 0;
 var currKey = null;
 var prevKey = null;
@@ -20,7 +20,7 @@ var currGameOver = true;
 
 function setup() {
     createCanvas(canvasWidth * 2, canvasHeight);
-    frameRate(10);
+    frameRate(60);
 }
 
 function draw() {
@@ -32,7 +32,9 @@ function draw() {
         }
         return;
     }
-
+    
+    drawSideBar();
+    resetDefaultStyles();
     if (gamePaused) {
         currBlock.draw();
         board.drawBoard();
@@ -88,36 +90,59 @@ function drawMainMenu() {
     // Tetris label
     strokeWeight(4);
     stroke(0, 0, 0);
-    fill(53, 25, 33);
+    fill('white');
     textSize(50);
     text("Tetris", 240, 100);
 
     // Play box
-    fill('white');
     rect(200, 200, 200, 100);
+    fill('green');
     text("PLAY", 240, 265);
+    
+    // Diffulcty options
+    fill('white');
+    rect(100, 400, 100, 50);
+    rect(250, 400, 100, 50);
+    rect(400, 400, 100, 50);
+    
+    fill('black');
+    strokeWeight(0);
+    textSize(20);
+    text('easy', 120, 432);
+    text('medium', 265, 432);
+    text('hard', 430, 432);
+    
 }
 
 function drawSideBar() {
     drawPreviewBlock();
 
-    strokeWeight(4);
+    strokeWeight(3);
     stroke(255, 204, 100);
     line(canvasWidth, 0, canvasWidth, canvasHeight);
 
+    strokeWeight(1);
     fill('orange');
-    rect(370, 270, 140, 40);
-    rect(370, 350, 140, 40);
+    rect(370, 250, 140, 40);
+    rect(370, 330, 140, 40);
+    rect(370, 410, 140, 40);
 
     fill(255, 255, 255);
     strokeWeight(1);
     textSize(30);
     textStyle(NORMAL);
-    text("Lines: " + board.getScore(), 400, 500);
+    
+    fill("white");
+    text("Menu", 400, 280);
+    text("Reset", 400, 360);
+    if (gamePaused) {
+        text("Play", 410, 440);
+    } else {
+        text("Pause", 400, 440);
+    }
+    
+    text("Lines: " + board.getScore(), 400, 510);
     fill(0, 0, 0);
-    text("Reset", 400, 300);
-    fill("black");
-    text("Pause", 400, 380);
 }
 
 function playButtonPressed() {
@@ -139,13 +164,23 @@ function resetDefaultStyles() {
     fill(255, 255, 255);
     stroke(255, 255, 255);
     strokeWeight(2);
+    textSize(30);
 }
 
 function mousePressed() {
 	// In main menu
 	if (!gameActive) {
-		if (mouseX < 400 && mouseX > 200 && mouseY < 300 && mouseY > 200) {
+		if (mouseX > 200 && mouseX < 400 && mouseY > 200 && mouseY < 300) {
             newGame();
+        } else if (mouseX > 100 && mouseX < 200 && mouseY > 400 && mouseY < 450) {
+            speedMillis = 1000;
+            speedUpTime = 250;
+        } else if (mouseX > 250 && mouseX < 350 && mouseY > 400 && mouseY < 450) {
+            speedMillis = 600;
+            speedUpTime = 150;
+        } else if (mouseX > 400 && mouseX < 500 && mouseY > 400 && mouseY < 450) {
+            speedMillis = 300;
+            speedUpTime = 50;
         }
 		return;
 	}
@@ -155,11 +190,13 @@ function mousePressed() {
 	        newGame();
 	    }
 	}
-	
-	if (mouseX > 370 && mouseX < 510 && mouseY > 270 && mouseY < 310) {
+    
+	if (mouseX > 370 && mouseX < 510 && mouseY > 250 && mouseY < 290) {
+        gameActive = false;
+    } else if (mouseX > 370 && mouseX < 510 && mouseY > 330 && mouseY < 370) {
 		//RESET GAME
 		newGame();
-	} else if (mouseX > 370 && mouseX < 510 && mouseY > 350 && mouseY < 390) {
+	} else if (mouseX > 370 && mouseX < 510 && mouseY > 410 && mouseY < 450) {
 		if (gamePaused) {
 			gamePaused = false;
 		} else {
@@ -188,20 +225,26 @@ function keyPressed() {
 
 function nonUpKeyPressed() {
     if (keyIsDown(DOWN_ARROW)) {
-        if (board.canFallDown(currBlock)) {
-            currBlock.siftDown();
-        } else {
+        if (Math.abs(time - millis()) > speedUpTime) {
+            if (board.canFallDown(currBlock)) {
+                currBlock.siftDown();
+            } else  {
             board.addBlock(currBlock);
             board.deleteRows();
             currBlock = null;
             setNewBlock();
-        }
-		time = millis();
+            }
+            time = millis();
+        }	
     }
     if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) {
         if (currKey == RIGHT_ARROW) {
             if (board.canMoveRight(currBlock)) {
                 currBlock.moveRight();
+            }
+        } else if (currKey == LEFT_ARROW) {
+            if (board.canMoveLeft(currBlock)) {
+                currBlock.moveLeft();
             }
         }
     } else {

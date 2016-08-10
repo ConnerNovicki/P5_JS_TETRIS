@@ -183,7 +183,7 @@ function Board(numCols, numRows) {
             for (j = 0; j < board[i].length; j++) {
                 var s = getSpaceAt(j, i);
                 if (s.getOccupied()) {
-					fill(s.getColor());
+										fill(s.getColor());
                     rect(s.getX() * blockSize, s.getY() * blockSize, blockSize, blockSize);
                 }
             }

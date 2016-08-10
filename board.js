@@ -20,7 +20,7 @@ function Board(numCols, numRows) {
     setupBoard(cols, rows);
 
     var getSpaceAt = function(x, y) {
-        // Board is set up opposite coordinates
+    // Board is set up opposite coordinates
 		// console.log(x, y);
 		// console.log(board.length, board[0].length);
         return board[y][x];

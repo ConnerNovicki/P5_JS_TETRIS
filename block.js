@@ -23,7 +23,7 @@ function Block(space) {
     };
 
     this.setAnchorSpace = function(space) {
-        anchorSpace = space
+        anchorSpace = space;
     };
 
 	this.siftDown = function() {
@@ -88,7 +88,7 @@ function Block(space) {
 			}
 		}
 		return allSquares;
-	}
+	};
 
     this.draw = function() {
 		var squares = this.getAllSquaresOfBlock(this.structure);
@@ -294,7 +294,7 @@ function ZBlock(space) {
 	};
 
 	this.currVar = allStructs.var1;
-    this.structure = this.currVar.s;
+  this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 	this.numVariations = 2;
@@ -381,7 +381,7 @@ function TBlock(space) {
 	};
 
 	this.currVar = allStructs.var1;
-    this.structure = this.currVar.s;
+  this.structure = this.currVar.s;
 	this.rightMost = this.currVar.rMost;
 	this.leftMost = this.currVar.lMost;
 	this.numVariations = 4;

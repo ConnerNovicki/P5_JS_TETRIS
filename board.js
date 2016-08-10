@@ -27,9 +27,6 @@ function Board(numCols, numRows) {
     };
 
 	this.colorSquare = function(x, y, clr) {
-		if (!(space instanceof Space)) {
-			throw new Error("Cannot add non space element");
-		}
 		var space = getSpaceAt(x, y);
 		space.addBlock(clr);
 	};
@@ -139,37 +136,19 @@ function Board(numCols, numRows) {
 		var numDeleteRows = completedRows.length;
 
 
-
+		console.log(numDeleteRows);
 		for (i = 0; i < numDeleteRows; i++) {
-			console.log(i);
 			board.splice(completedRows[i], 1);
 			shiftBoardDown(completedRows[i]);
 			board.unshift(getNewRow());
 			score++;
 		}
-
-//		var completedRows = getCompletedRows();
-//		for (i = 0; i < completedRows.length; i++) {
-//			var rowCompleted = completedRows[i];
-//
-//			board.splice(rowCompleted, 1);
-//			this.shiftBoardDown(rowCompleted);
-//		}
-//
-//
-//		for (i = 0 ; i < completedRows.length; i++) {
-//			var tempArr = [];
-//			for (j = 0; j < cols; j++) {
-//				tempArr.push(new Space(j, 0));
-//			}
-//			board.unshift(tempArr);
-//		}
 	};
 
 	var shiftBoardDown = function(completedRow) {
-		for (i = 0; i < completedRow; i++) {
+		for (a = 0; a < completedRow; a++) {
 			for (j = 0; j < cols; j++) {
-				getSpaceAt(j, i).shiftDown();
+				getSpaceAt(j, a).shiftDown();
 			}
 		}
 	};
@@ -193,8 +172,8 @@ function Board(numCols, numRows) {
 
 	var getNewRow = function() {
 		var tempArray = [];
-		for (i = 0; i < cols; i++) {
-			tempArray.push(new Space(i, 0));
+		for (x = 0; x < cols; x++) {
+			tempArray.push(new Space(x, 0));
 		}
 		return tempArray;
 	};

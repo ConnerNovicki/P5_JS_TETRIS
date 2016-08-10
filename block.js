@@ -2,14 +2,15 @@ var blockSize = 30;
 
 function inheritsFrom(child, parent) {
     child.prototype = Object.create(parent.prototype);
-};
+}
 
 function Block(space) {
-    if (!space instanceof Space) {
+    if (!(space instanceof Space)) {
         throw new Error('Wrong parameter!');
     }
     // private
     var anchorSpace = space;
+
 
     // public
 	this.rightMost = 0;
@@ -19,23 +20,23 @@ function Block(space) {
 
     this.getAnchorSpace = function() {
         return anchorSpace;
-    }
+    };
 
     this.setAnchorSpace = function(space) {
         anchorSpace = space
-    }
+    };
 
 	this.siftDown = function() {
 		anchorSpace = new Space(anchorSpace.getX(), anchorSpace.getY() + 1);
-	}
+	};
 
 	this.moveRight = function() {
 		anchorSpace = new Space(anchorSpace.getX() + 1, anchorSpace.getY());
-	}
+	};
 
     this.moveLeft = function() {
 		anchorSpace = new Space(anchorSpace.getX() - 1, anchorSpace.getY());
-	}
+	};
 
 	this._getNextVariation = function(numVars, allStructs, currVar) {
 		var variation;
@@ -65,7 +66,7 @@ function Block(space) {
 				}
 			}
 		return variation;
-	}
+	};
 
 	this.rotateBlock = function(numVars, allStructs, currVar) {
 		var variation = this._getNextVariation(numVars, allStructs, currVar);
@@ -73,7 +74,7 @@ function Block(space) {
 		this.structure = this.currVar.s;
 		this.rightMost = this.currVar.rmost;
 		this.leftMost = this.currVar.lmost;
-	}
+	};
 
 	this.getAllSquaresOfBlock = function(structure) {
 		// Returns array of [x, y] arrays
@@ -82,7 +83,7 @@ function Block(space) {
 			for (j = 0; j < structure[i].length; j++) {
 				if (structure[i][j] == 1) {
 					var space = this.getAnchorSpace();
-					allSquares.push([space.getX() + j, space.getY() + i])
+					allSquares.push([space.getX() + j, space.getY() + i]);
 				}
 			}
 		}
@@ -93,9 +94,9 @@ function Block(space) {
 		var squares = this.getAllSquaresOfBlock(this.structure);
 		for (i = 0; i < squares.length; i++) {
 			fill(this.color);
-			rect(squares[i][0] * blockSize, squares[i][1] * blockSize, blockSize, blockSize)
+			rect(squares[i][0] * blockSize, squares[i][1] * blockSize, blockSize, blockSize);
 		}
-    }
+  };
 }
 
 
@@ -114,7 +115,7 @@ function SquareBlock(space) {
 
 	this.rotate = function() {
 		return;
-	}
+	};
 
 	this.getNextVariation = function() {
 		return {
@@ -123,7 +124,7 @@ function SquareBlock(space) {
 			rMost: 1,
 			lMost: 0
 		};
-	}
+	};
 }
 
 function LBlock(space) {
@@ -160,7 +161,7 @@ function LBlock(space) {
 			rMost: 2,
 			lMost: 0
 		}
-	}
+	};
 
 	this.currVar = allStructs.var1;
     this.structure = this.currVar.s;
@@ -170,11 +171,11 @@ function LBlock(space) {
 
 	this.getNextVariation = function() {
 		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
-	}
+	};
 
 	this.rotate = function() {
 		this.rotateBlock(this.numVariations, allStructs, this.currVar);
-	}
+	};
 }
 
 function BLBlock(space) {
@@ -212,7 +213,7 @@ function BLBlock(space) {
 			rMost: 2,
 			lMost: 0
 		}
-	}
+	};
 
 	this.currVar = allStructs.var1;
     this.structure = this.currVar.s;
@@ -222,11 +223,11 @@ function BLBlock(space) {
 
 	this.getNextVariation = function() {
 		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
-	}
+	};
 
 	this.rotate = function() {
 		this.rotateBlock(this.numVariations, allStructs, this.currVar);
-	}
+	};
 }
 
 function LineBlock(space) {
@@ -252,7 +253,7 @@ function LineBlock(space) {
 			rMost: 3,
 			lMost: 0
 		}
-	}
+	};
 
 	this.currVar = allStructs.var1;
     this.structure = this.currVar.s;
@@ -262,11 +263,11 @@ function LineBlock(space) {
 
 	this.getNextVariation = function() {
 		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
-	}
+	};
 
 	this.rotate = function() {
 		this.rotateBlock(this.numVariations, allStructs, this.currVar);
-	}
+	};
 
 }
 
@@ -290,7 +291,7 @@ function ZBlock(space) {
 			rMost: 1,
 			lMost: 0
 		}
-	}
+	};
 
 	this.currVar = allStructs.var1;
     this.structure = this.currVar.s;
@@ -300,11 +301,11 @@ function ZBlock(space) {
 
 	this.getNextVariation = function() {
 		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
-	}
+	};
 
 	this.rotate = function() {
 		this.rotateBlock(this.numVariations, allStructs, this.currVar);
-	}
+	};
 }
 
 function BZBlock(space) {
@@ -327,7 +328,7 @@ function BZBlock(space) {
 			rMost: 1,
 			lMost: 0
 		}
-	}
+	};
 
 	this.currVar = allStructs.var1;
     this.structure = this.currVar.s;
@@ -337,11 +338,11 @@ function BZBlock(space) {
 
 	this.getNextVariation = function() {
 		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
-	}
+	};
 
 	this.rotate = function() {
 		this.rotateBlock(this.numVariations, allStructs, this.currVar);
-	}
+	};
 }
 
 function TBlock(space) {
@@ -377,7 +378,7 @@ function TBlock(space) {
 			rMost: 2,
 			lMost: 0
 		}
-	}
+	};
 
 	this.currVar = allStructs.var1;
     this.structure = this.currVar.s;
@@ -387,11 +388,11 @@ function TBlock(space) {
 
 	this.getNextVariation = function() {
 		return this._getNextVariation(this.numVariations, allStructs, this.currVar);
-	}
+	};
 
 	this.rotate = function() {
 		this.rotateBlock(this.numVariations, allStructs, this.currVar);
-	}
+	};
 }
 
 

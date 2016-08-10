@@ -15,7 +15,7 @@ function Board(numCols, numRows) {
             }
             board.push(tempArr);
         }
-    }
+    };
 
     setupBoard(cols, rows);
 
@@ -24,19 +24,19 @@ function Board(numCols, numRows) {
 		// console.log(x, y);
 		// console.log(board.length, board[0].length);
         return board[y][x];
-    }
+    };
 
 	this.colorSquare = function(x, y, clr) {
-		if (!space instanceof Space) {
+		if (!(space instanceof Space)) {
 			throw new Error("Cannot add non space element");
 		}
 		var space = getSpaceAt(x, y);
 		space.addBlock(clr);
-	}
+	};
 
 	this.canFallDown = function(block) {
 		// allBlcoks is list of all square of block
-		if (!block instanceof Block) { throw new Error("Must pass isValidMove a Block object");}
+		if (!(block instanceof Block)) { throw new Error("Must pass isValidMove a Block object");}
 
 		var allSquares = block.getAllSquaresOfBlock(block.structure);
 		for (i = 0; i < allSquares.length; i++) {
@@ -48,15 +48,15 @@ function Board(numCols, numRows) {
 				return false;
 			}
 			if (getSpaceAt(x, y + 1).getOccupied()) {
-				return false
+				return false;
 			}
 
 		}
 		return true;
-	}
+	};
 
 	this.canMoveRight = function(block) {
-		if (!block instanceof Block) { throw new Error("Must pass canMoveRight a Block object");}
+		if (!(block instanceof Block)) { throw new Error("Must pass canMoveRight a Block object");}
 
 		var allSquares = block.getAllSquaresOfBlock(block.structure);
 		for (i = 0; i < allSquares.length; i++) {
@@ -71,10 +71,10 @@ function Board(numCols, numRows) {
 			}
 		}
 		return true;
-	}
+	};
 
 	this.canMoveLeft = function(block) {
-		if (!block instanceof Block) { throw new Error("Must pass canMoveRight a Block object");}
+		if (!(block instanceof Block)) { throw new Error("Must pass canMoveRight a Block object");}
 
 		var allSquares = block.getAllSquaresOfBlock(block.structure);
 		for (i = 0; i < allSquares.length; i++) {
@@ -89,7 +89,7 @@ function Board(numCols, numRows) {
 			}
 		}
 		return true;
-	}
+	};
 
 	this.canRotate = function(arrayOfSquares) {
 		for (i = 0; i < arrayOfSquares.length; i++) {
@@ -100,10 +100,10 @@ function Board(numCols, numRows) {
 			}
 		}
 		return true;
-	}
+	};
 
 	this.addBlock = function(block) {
-		if (!block instanceof Block) { throw new Error("Must pass addBlock a Block object");}
+		if (!(block instanceof Block)) { throw new Error("Must pass addBlock a Block object");}
 
 		allSquares = block.getAllSquaresOfBlock(block.structure);
 		var color = block.color;
@@ -113,7 +113,7 @@ function Board(numCols, numRows) {
 			var y = s[1];
 			this.colorSquare(x, y, color);
 		}
-	}
+	};
 
 	var getCompletedRows = function() {
 		var completedRows = [];
@@ -130,7 +130,7 @@ function Board(numCols, numRows) {
 			}
 		}
 		return completedRows;
-	}
+	};
 
 	this.deleteRows = function() {
 		var completedRows = getCompletedRows();
@@ -164,7 +164,7 @@ function Board(numCols, numRows) {
 //			}
 //			board.unshift(tempArr);
 //		}
-	}
+	};
 
 	var shiftBoardDown = function(completedRow) {
 		for (i = 0; i < completedRow; i++) {
@@ -172,7 +172,7 @@ function Board(numCols, numRows) {
 				getSpaceAt(j, i).shiftDown();
 			}
 		}
-	}
+	};
 
 	// IMPLEMENT
 	this.gameIsOver = function() {
@@ -185,11 +185,11 @@ function Board(numCols, numRows) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	this.getScore = function() {
 		return score;
-	}
+	};
 
 	var getNewRow = function() {
 		var tempArray = [];
@@ -197,8 +197,8 @@ function Board(numCols, numRows) {
 			tempArray.push(new Space(i, 0));
 		}
 		return tempArray;
-	}
-
+	};
+	
     this.drawBoard = function() {
         for (i = 0; i < board.length; i++) {
             for (j = 0; j < board[i].length; j++) {
@@ -209,5 +209,5 @@ function Board(numCols, numRows) {
                 }
             }
         }
-    }
+    };
 }

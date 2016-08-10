@@ -46,7 +46,7 @@ function draw() {
 	checkMousePos();
 
 	resetDefaultStyles();
-    if (currBlock == null) {
+    if (currBlock === null) {
         setNewBlock();
     }
 
@@ -132,8 +132,8 @@ function playButtonPressed() {
 
 function drawPreviewBlock() {
 	resetDefaultStyles();
-	text("Next Piece", 380, 40)
-    previewBlock.draw();
+	text("Next Piece", 380, 40);
+  previewBlock.draw();
 }
 
 function resetDefaultStyles() {
@@ -158,7 +158,7 @@ function checkMousePos() {
 }
 
 function keyPressed() {
-	if (currKey != null){
+	if (currKey !== null){
 		prevKey = currKey;
 		currKey = keyCode;
 	} else {
@@ -239,7 +239,7 @@ function keyReleased() {
 
 function setNewBlock() {
     time = millis();
-    if (previewBlock != null) {
+    if (previewBlock !== null) {
         currBlock = previewBlock;
         currBlock.setAnchorSpace(new Space(4, 0));
     } else {

@@ -17,6 +17,9 @@ var prevKey = null;
 var previewBlock = null;
 var blockLocked = false;
 var currGameOver = true;
+var sideTimeWait = 100;
+var rightTime = 0;
+
 
 function setup() {
     createCanvas(canvasWidth * 2, canvasHeight);
@@ -173,14 +176,17 @@ function mousePressed() {
 		if (mouseX > 200 && mouseX < 400 && mouseY > 200 && mouseY < 300) {
             newGame();
         } else if (mouseX > 100 && mouseX < 200 && mouseY > 400 && mouseY < 450) {
-            speedMillis = 1000;
+            speedMillis = 800;
             speedUpTime = 250;
+            sideTimeWait = 125;
         } else if (mouseX > 250 && mouseX < 350 && mouseY > 400 && mouseY < 450) {
-            speedMillis = 600;
-            speedUpTime = 150;
+            speedMillis = 400;
+            speedUpTime = 125;
+            sideTimeWait = 100;
         } else if (mouseX > 400 && mouseX < 500 && mouseY > 400 && mouseY < 450) {
             speedMillis = 300;
             speedUpTime = 50;
+            sideTimeWait = 75;
         }
 		return;
 	}
@@ -212,6 +218,18 @@ function keyPressed() {
     } else {
         currKey = keyCode;
     }
+    leftTime = millis();
+    rightTime = millis();
+
+    if (keyCode == LEFT_ARROW) {
+        if (board.canMoveLeft(currBlock)) {
+            currBlock.moveLeft();
+        }
+    } else if (keyCode == RIGHT_ARROW) {
+        if (board.canMoveRight(currBlock)) {
+            currBlock.moveRight();
+        }
+    }
 
     if (currKey == UP_ARROW) {
         // Check if block can rotate
@@ -229,37 +247,40 @@ function nonUpKeyPressed() {
             if (board.canFallDown(currBlock)) {
                 currBlock.siftDown();
             } else  {
-            board.addBlock(currBlock);
-            board.deleteRows();
-            currBlock = null;
-            setNewBlock();
+                board.addBlock(currBlock);
+                board.deleteRows();
+                currBlock = null;
+                setNewBlock();
             }
             time = millis();
         }	
     }
+    
     if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) {
         if (currKey == RIGHT_ARROW) {
-            if (board.canMoveRight(currBlock)) {
+            if (board.canMoveRight(currBlock) && Math.abs(rightTime - millis()) > sideTimeWait) {
                 currBlock.moveRight();
+                rightTime = millis();
             }
         } else if (currKey == LEFT_ARROW) {
-            if (board.canMoveLeft(currBlock)) {
+            if (board.canMoveLeft(currBlock) && Math.abs(leftTime - millis()) > sideTimeWait) {
                 currBlock.moveLeft();
+                leftTime = millis();
             }
         }
     } else {
-
         if (keyIsDown(LEFT_ARROW)) {
-            if (board.canMoveLeft(currBlock)) {
+            if (board.canMoveLeft(currBlock) && Math.abs(leftTime - millis()) > sideTimeWait) {
                 currBlock.moveLeft();
+                leftTime = millis();
             }
         }
         if (keyIsDown(RIGHT_ARROW)) {
-            if (board.canMoveRight(currBlock)) {
+            if (board.canMoveRight(currBlock) && Math.abs(rightTime - millis()) > sideTimeWait) {
                 currBlock.moveRight();
+                rightTime = millis();
             }
         }
-        
     }
 }
 

@@ -136,28 +136,29 @@ function LBlock(space) {
 	var allStructs = {
 		var1: {
 			s: [[1, 0],
-                 [1, 0],
-                 [1, 1]],
+          [1, 0],
+          [1, 1]],
 			rMost: 1,
 			lMost: 0
 		},
 		var2: {
-			s: [[0, 0, 1],
-                [1, 1, 1]],
-
+			
+			s: [[1, 1, 1],
+          [1, 0, 0]],
 			rMost: 2,
 			lMost: 0
 		},
 		var3: {
 			s: [[1, 1],
-                      [0, 1],
-                      [0, 1]],
+         [0, 1],
+         [0, 1]],
 			rMost: 1,
 			lMost: 0
 		},
 		var4: {
-			s: [[1, 1, 1],
-                      [1, 0, 0]],
+			s: [[0, 0, 1],
+          [1, 1, 1]],
+
 			rMost: 2,
 			lMost: 0
 		}
@@ -187,29 +188,29 @@ function BLBlock(space) {
 	var allStructs = {
 		var1: {
 			s: [[1, 1],
-                [1, 0],
-                [1, 0]],
+          [1, 0],
+          [1, 0]],
 
 			rMost: 1,
 			lMost: 0
 		},
 		var2: {
 			s: [[1, 1, 1],
-                [0, 0, 1]],
+          [0, 0, 1]],
 
 			rMost: 2,
 			lMost: 0
 		},
 		var3: {
 			s: [[0, 1],
-                [0, 1],
-                [1, 1]],
+          [0, 1],
+          [1, 1]],
 			rMost: 1,
 			lMost: 0
 		},
 		var4: {
 			s: [[1, 0, 0],
-                [1, 1, 1]],
+          [1, 1, 1]],
 			rMost: 2,
 			lMost: 0
 		}
@@ -239,17 +240,17 @@ function LineBlock(space) {
 	var allStructs = {
 		var1: {
 			s: [[0, 1, 0, 0],
-                [0, 1, 0, 0],
-                [0, 1, 0, 0],
+          [0, 1, 0, 0],
+          [0, 1, 0, 0],
 		    	[0, 1, 0, 0]],
 			rMost: 1,
 			lMost: 1
 		},
 		var2: {
 			s: [[0, 0, 0, 0],
-                [1, 1, 1, 1],
-                [0, 0, 0, 0],
-				[0, 0, 0, 0]],
+          [1, 1, 1, 1],
+          [0, 0, 0, 0],
+				  [0, 0, 0, 0]],
 			rMost: 3,
 			lMost: 0
 		}
@@ -280,7 +281,7 @@ function ZBlock(space) {
 	var allStructs = {
 		var1: {
 			s: [[0, 1, 1],
-                [1, 1, 0]],
+          [1, 1, 0]],
 			rMost: 2,
 			lMost: 0
 		},
@@ -317,7 +318,7 @@ function BZBlock(space) {
 	var allStructs = {
 		var1: {
 			s: [[1, 1, 0],
-                [0, 1, 1]],
+          [0, 1, 1]],
 			rMost: 2,
 			lMost: 0
 		},

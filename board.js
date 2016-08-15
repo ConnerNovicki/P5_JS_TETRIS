@@ -131,12 +131,8 @@ function Board(numCols, numRows) {
 
 	this.deleteRows = function() {
 		var completedRows = getCompletedRows();
-		console.log(completedRows);
-
 		var numDeleteRows = completedRows.length;
 
-
-		console.log(numDeleteRows);
 		for (i = 0; i < numDeleteRows; i++) {
 			board.splice(completedRows[i], 1);
 			shiftBoardDown(completedRows[i]);

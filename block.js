@@ -89,6 +89,35 @@ function Block(space) {
 		}
 		return allSquares;
 	};
+	
+	this.instaLockBlock = function() {
+		var origAnchor = this.getAnchorSpace();
+		while (board.canFallDown(this)) {
+			this.siftDown();
+		} 
+		var squares = this.getAllSquaresOfBlock(this.structure);
+		for (i = 0; i < squares.length; i++) {
+			stroke(this.color);
+			fill(69);
+			rect(squares[i][0] * blockSize, squares[i][1] * blockSize, blockSize, blockSize);
+		}
+		stroke('white');
+	}
+	
+	this.drawFallenBlock = function(board) {
+		var origAnchor = this.getAnchorSpace();
+		while (board.canFallDown(this)) {
+			this.siftDown();
+		} 
+		var squares = this.getAllSquaresOfBlock(this.structure);
+		for (i = 0; i < squares.length; i++) {
+			stroke(this.color);
+			fill(69);
+			rect(squares[i][0] * blockSize, squares[i][1] * blockSize, blockSize, blockSize);
+		}
+		this.setAnchorSpace(origAnchor);
+		stroke('white');
+	};
 
     this.draw = function() {
 		var squares = this.getAllSquaresOfBlock(this.structure);

@@ -16,27 +16,52 @@ var currKey = null;
 var prevKey = null;
 var previewBlock = null;
 var blockLocked = false;
-var currGameOver = true;
+var currGameOver = false;
 var sideTimeWait = 100;
 var rightTime = 0;
 var difficulties = {
     easy: {
         speedMillis: 800,
-        speedUpTime: 250,
+        speedUpTime: 125,
         sideTimeWait: 125,
-        
+        speedMillisIncrement: 5,
+        speedUpTimeIncrement: 1,
+        sideTimeWaitIncrement: 1,
+        maxSpeedMillis: 400,
+        reset: function() {
+            this.speedMillis = 800;
+            this.speedUpTime = 125;
+            this.sideTimeWait = 125;
+
+        }
     }, 
     medium: {
         speedMillis: 400,
-        speedUpTime: 125,
+        speedUpTime: 100,
         sideTimeWait: 100,
-        
+        speedMillisIncrement: 10,
+        speedUpTimeIncrement: 1,
+        sideTimeWaitIncrement: 1,
+        maxSpeedMillis: 150,
+        reset: function() {
+            this.speedMillis = 400;
+            this.speedUpTime = 100;
+            this.sideTimeWait = 100;
+        }
     },
     hard: {
         speedMillis: 300,
         speedUpTime: 50,
         sideTimeWait: 75,
-        
+        speedMillisIncrement: 15,
+        speedUpTimeIncrement: 0,
+        sideTimeWaitIncrement: 0,
+        maxSpeedMillis: 120,
+        reset: function() {
+            this.speedMillis = 300;
+            this.speedUpTime = 50;
+            this.sideTimeWait = 75;
+        }
     }
 };
 var currDifficulty = difficulties.medium;
@@ -58,7 +83,7 @@ function draw() {
     drawSideBar();
     resetDefaultStyles();
     if (gamePaused) {
-        currBlock.draw();
+        drawCurrBlock();
         board.drawBoard();
         return;
     }
@@ -79,11 +104,11 @@ function draw() {
 
 function updateCanvas() {
     if (blockLocked) {
-        board.deleteRows();
-        blockLocked = false;
+        checkAndDeleteRows();
     }
 
-    currBlock.draw();
+    drawCurrBlock();
+    
     board.drawBoard();
     if (board.gameIsOver()) {
 		currGameOver = true;
@@ -160,6 +185,11 @@ function drawSideBar() {
     fill(0, 0, 0);
 }
 
+function drawCurrBlock() {
+    currBlock.drawFallenBlock(board);
+    currBlock.draw();
+}
+
 function drawPreviewBlock() {
     resetDefaultStyles();
     text("Next Piece", 380, 40);
@@ -183,6 +213,12 @@ function resetDefaultStyles() {
 }
 
 function mousePressed() {
+    if (currGameOver) {
+        if (mouseIsPressed) {
+            newGame();
+        }
+    }
+    
 	// In main menu
 	if (!gameActive) {
 		if (mouseX > 200 && mouseX < 400 && mouseY > 200 && mouseY < 300) {
@@ -197,12 +233,6 @@ function mousePressed() {
 		return;
 	}
 	
-	if (currGameOver) {
-		if (mouseIsPressed) {
-	        newGame();
-	    }
-	}
-    
 	if (mouseX > 370 && mouseX < 510 && mouseY > 250 && mouseY < 290) {
         gameActive = false;
     } else if (mouseX > 370 && mouseX < 510 && mouseY > 330 && mouseY < 370) {
@@ -215,6 +245,16 @@ function mousePressed() {
 			gamePaused = true;
 		}
 	}
+}
+
+function keyTyped() {
+    if (key === ' ') {
+        currBlock.instaLockBlock();
+        board.addBlock(currBlock);
+        blockLocked = true;
+        currBlock = null;
+        setNewBlock();
+    }
 }
 
 function keyPressed() {
@@ -304,12 +344,27 @@ function setNewBlock() {
     previewBlock = getNewBlock(14, 2);
 }
 
+function checkAndDeleteRows() {
+    var r = board.getCompletedRows();
+    if (r.length > 0) {
+        board.deleteRows(r);
+        if (currDifficulty.speedMillis > currDifficulty.maxSpeedMillis) {
+            currDifficulty.speedUpTime -= currDifficulty.speedUpTimeIncrement * r.length;
+            currDifficulty.speedMillis -= currDifficulty.speedMillisIncrement * r.length;
+            currDifficulty.sideTimeWait -= currDifficulty.sideTimeWaitIncrement * r.length;
+            console.log(currDifficulty.speedMillis, currDifficulty.speedUpTime, currDifficulty.sideTimeWait);
+        }
+    }
+    blockLocked = false;
+}
+
 function newGame() {
     gameActive = true;
     board = new Board(numCols, numRows);
     setNewBlock();
     gamePaused = false;
 	currGameOver = false;
+    currDifficulty.reset();
 }
 
 function gameOver() {

@@ -1,3 +1,5 @@
 # P5_JS_TETRIS
 
-[Play](https://www.connernovicki.github.io) the game.
+
+
+Play the game at connernovicki.github.io

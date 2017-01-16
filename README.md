@@ -2,4 +2,4 @@
 
 Play the game at connernovicki.github.io
 
-![alt text](tetris.PNG)
+![alt text](Tetris.PNG)

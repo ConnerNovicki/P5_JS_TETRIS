@@ -16,9 +16,55 @@ var currKey = null;
 var prevKey = null;
 var previewBlock = null;
 var blockLocked = false;
-var currGameOver = true;
+var currGameOver = false;
 var sideTimeWait = 100;
 var rightTime = 0;
+var difficulties = {
+    easy: {
+        speedMillis: 800,
+        speedUpTime: 125,
+        sideTimeWait: 125,
+        speedMillisIncrement: 5,
+        speedUpTimeIncrement: 1,
+        sideTimeWaitIncrement: 1,
+        maxSpeedMillis: 400,
+        reset: function() {
+            this.speedMillis = 800;
+            this.speedUpTime = 125;
+            this.sideTimeWait = 125;
+
+        }
+    }, 
+    medium: {
+        speedMillis: 400,
+        speedUpTime: 100,
+        sideTimeWait: 100,
+        speedMillisIncrement: 10,
+        speedUpTimeIncrement: 1,
+        sideTimeWaitIncrement: 1,
+        maxSpeedMillis: 150,
+        reset: function() {
+            this.speedMillis = 400;
+            this.speedUpTime = 100;
+            this.sideTimeWait = 100;
+        }
+    },
+    hard: {
+        speedMillis: 300,
+        speedUpTime: 50,
+        sideTimeWait: 75,
+        speedMillisIncrement: 15,
+        speedUpTimeIncrement: 0,
+        sideTimeWaitIncrement: 0,
+        maxSpeedMillis: 120,
+        reset: function() {
+            this.speedMillis = 300;
+            this.speedUpTime = 50;
+            this.sideTimeWait = 75;
+        }
+    }
+};
+var currDifficulty = difficulties.medium;
 
 
 function setup() {
@@ -30,56 +76,39 @@ function draw() {
 
     if (!gameActive) {
         drawMainMenu();
-        if (playButtonPressed()) {
-            newGame();
-        }
+        
         return;
     }
-    
+    background(50);
     drawSideBar();
     resetDefaultStyles();
     if (gamePaused) {
-        currBlock.draw();
+        drawCurrBlock();
         board.drawBoard();
         return;
     }
-
-    background(50);
-
-    // Draw right menu
-    drawSideBar();
-    
-
     resetDefaultStyles();
-    if (currBlock === null) {
-        setNewBlock();
-    }
 
     // Check for auto move bc time
-    if (Math.abs(time - millis()) > speedMillis) {
-        fastTime = millis();
-        if (board.canFallDown(currBlock)) {
-            currBlock.siftDown();
-        } else {
-            board.addBlock(currBlock);
-            blockLocked = true;
-            currBlock = null;
-            setNewBlock();
-        }
-        time = millis();
+    if (Math.abs(time - millis()) > currDifficulty.speedMillis) {
+        siftBlockDown();
     }
 
-
+    // Check non-up arrow key pressed
     if (keyIsDown(DOWN_ARROW) || keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)) {
         nonUpKeyPressed();
     }
 
+    updateCanvas();
+}
+
+function updateCanvas() {
     if (blockLocked) {
-        board.deleteRows();
-        blockLocked = false;
+        checkAndDeleteRows();
     }
 
-    currBlock.draw();
+    drawCurrBlock();
+    
     board.drawBoard();
     if (board.gameIsOver()) {
 		currGameOver = true;
@@ -107,14 +136,22 @@ function drawMainMenu() {
     rect(100, 400, 100, 50);
     rect(250, 400, 100, 50);
     rect(400, 400, 100, 50);
-    
+    if (currDifficulty === difficulties.easy) {
+        fill('blue');
+        rect(100, 400, 100, 50);
+    } else if (currDifficulty === difficulties.medium) {
+        fill('blue');
+        rect(250, 400, 100, 50);
+    } else {
+        fill('blue');
+        rect(400, 400, 100, 50);
+    }
     fill('black');
     strokeWeight(0);
     textSize(20);
     text('easy', 120, 432);
     text('medium', 265, 432);
     text('hard', 430, 432);
-    
 }
 
 function drawSideBar() {
@@ -148,6 +185,17 @@ function drawSideBar() {
     fill(0, 0, 0);
 }
 
+function drawCurrBlock() {
+    currBlock.drawFallenBlock(board);
+    currBlock.draw();
+}
+
+function drawPreviewBlock() {
+    resetDefaultStyles();
+    text("Next Piece", 380, 40);
+    previewBlock.draw();
+}
+
 function playButtonPressed() {
     if (mouseIsPressed) {
         if (mouseX < 400 && mouseX > 200 && mouseY < 300 && mouseY > 200) {
@@ -155,12 +203,6 @@ function playButtonPressed() {
         }
     }
     return false;
-}
-
-function drawPreviewBlock() {
-    resetDefaultStyles();
-    text("Next Piece", 380, 40);
-    previewBlock.draw();
 }
 
 function resetDefaultStyles() {
@@ -171,32 +213,26 @@ function resetDefaultStyles() {
 }
 
 function mousePressed() {
+    if (currGameOver) {
+        if (mouseIsPressed) {
+            newGame();
+        }
+    }
+    
 	// In main menu
 	if (!gameActive) {
 		if (mouseX > 200 && mouseX < 400 && mouseY > 200 && mouseY < 300) {
             newGame();
         } else if (mouseX > 100 && mouseX < 200 && mouseY > 400 && mouseY < 450) {
-            speedMillis = 800;
-            speedUpTime = 250;
-            sideTimeWait = 125;
+            currDifficulty = difficulties.easy;
         } else if (mouseX > 250 && mouseX < 350 && mouseY > 400 && mouseY < 450) {
-            speedMillis = 400;
-            speedUpTime = 125;
-            sideTimeWait = 100;
+            currDifficulty = difficulties.medium;
         } else if (mouseX > 400 && mouseX < 500 && mouseY > 400 && mouseY < 450) {
-            speedMillis = 300;
-            speedUpTime = 50;
-            sideTimeWait = 75;
+            currDifficulty = difficulties.hard;
         }
 		return;
 	}
 	
-	if (currGameOver) {
-		if (mouseIsPressed) {
-	        newGame();
-	    }
-	}
-    
 	if (mouseX > 370 && mouseX < 510 && mouseY > 250 && mouseY < 290) {
         gameActive = false;
     } else if (mouseX > 370 && mouseX < 510 && mouseY > 330 && mouseY < 370) {
@@ -209,6 +245,16 @@ function mousePressed() {
 			gamePaused = true;
 		}
 	}
+}
+
+function keyTyped() {
+    if (key === ' ') {
+        currBlock.instaLockBlock();
+        board.addBlock(currBlock);
+        blockLocked = true;
+        currBlock = null;
+        setNewBlock();
+    }
 }
 
 function keyPressed() {
@@ -243,47 +289,38 @@ function keyPressed() {
 
 function nonUpKeyPressed() {
     if (keyIsDown(DOWN_ARROW)) {
-        if (Math.abs(time - millis()) > speedUpTime) {
-            if (board.canFallDown(currBlock)) {
-                currBlock.siftDown();
-            } else  {
-                board.addBlock(currBlock);
-                board.deleteRows();
-                currBlock = null;
-                setNewBlock();
-            }
-            time = millis();
-        }	
+        if (Math.abs(time - millis()) > currDifficulty.speedUpTime) {
+            siftBlockDown();
+        }
     }
     
     if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) {
         if (currKey == RIGHT_ARROW) {
-            if (board.canMoveRight(currBlock) && Math.abs(rightTime - millis()) > sideTimeWait) {
+            if (board.canMoveRight(currBlock) && Math.abs(rightTime - millis()) > currDifficulty.sideTimeWait) {
                 currBlock.moveRight();
                 rightTime = millis();
             }
         } else if (currKey == LEFT_ARROW) {
-            if (board.canMoveLeft(currBlock) && Math.abs(leftTime - millis()) > sideTimeWait) {
+            if (board.canMoveLeft(currBlock) && Math.abs(leftTime - millis()) > currDifficulty.sideTimeWait) {
                 currBlock.moveLeft();
                 leftTime = millis();
             }
         }
     } else {
         if (keyIsDown(LEFT_ARROW)) {
-            if (board.canMoveLeft(currBlock) && Math.abs(leftTime - millis()) > sideTimeWait) {
+            if (board.canMoveLeft(currBlock) && Math.abs(leftTime - millis()) > currDifficulty.sideTimeWait) {
                 currBlock.moveLeft();
                 leftTime = millis();
             }
         }
         if (keyIsDown(RIGHT_ARROW)) {
-            if (board.canMoveRight(currBlock) && Math.abs(rightTime - millis()) > sideTimeWait) {
+            if (board.canMoveRight(currBlock) && Math.abs(rightTime - millis()) > currDifficulty.sideTimeWait) {
                 currBlock.moveRight();
                 rightTime = millis();
             }
         }
     }
 }
-
 
 function keyReleased() {
 
@@ -307,12 +344,27 @@ function setNewBlock() {
     previewBlock = getNewBlock(14, 2);
 }
 
+function checkAndDeleteRows() {
+    var r = board.getCompletedRows();
+    if (r.length > 0) {
+        board.deleteRows(r);
+        if (currDifficulty.speedMillis > currDifficulty.maxSpeedMillis) {
+            currDifficulty.speedUpTime -= currDifficulty.speedUpTimeIncrement * r.length;
+            currDifficulty.speedMillis -= currDifficulty.speedMillisIncrement * r.length;
+            currDifficulty.sideTimeWait -= currDifficulty.sideTimeWaitIncrement * r.length;
+            console.log(currDifficulty.speedMillis, currDifficulty.speedUpTime, currDifficulty.sideTimeWait);
+        }
+    }
+    blockLocked = false;
+}
+
 function newGame() {
     gameActive = true;
     board = new Board(numCols, numRows);
     setNewBlock();
     gamePaused = false;
 	currGameOver = false;
+    currDifficulty.reset();
 }
 
 function gameOver() {
@@ -324,6 +376,18 @@ function gameOver() {
 	
 	stroke(2);
 	text('Click for new game', 180, 350);
+}
+
+function siftBlockDown() {
+    if (board.canFallDown(currBlock)) {
+        currBlock.siftDown();
+    } else  {
+        board.addBlock(currBlock);
+        blockLocked = true;
+        currBlock = null;
+        setNewBlock();
+    }
+    time = millis();
 }
 
 function getNewBlock(x, y) {

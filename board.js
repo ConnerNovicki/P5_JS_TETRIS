@@ -112,7 +112,7 @@ function Board(numCols, numRows) {
 		}
 	};
 
-	var getCompletedRows = function() {
+	this.getCompletedRows = function() {
 		var completedRows = [];
 		for (i = 0; i < board.length; i++) {
 			var isComplete = true;
@@ -129,14 +129,9 @@ function Board(numCols, numRows) {
 		return completedRows;
 	};
 
-	this.deleteRows = function() {
-		var completedRows = getCompletedRows();
-		console.log(completedRows);
-
+	this.deleteRows = function(completedRows) {
 		var numDeleteRows = completedRows.length;
 
-
-		console.log(numDeleteRows);
 		for (i = 0; i < numDeleteRows; i++) {
 			board.splice(completedRows[i], 1);
 			shiftBoardDown(completedRows[i]);

@@ -142,7 +142,7 @@ function LBlock(space) {
 			lMost: 0
 		},
 		var2: {
-			
+
 			s: [[1, 1, 1],
           [1, 0, 0]],
 			rMost: 2,
